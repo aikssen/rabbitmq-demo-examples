@@ -11,6 +11,9 @@ require "bunny"
 # take a task from the queue. For example, if there are two worker.rb consoles opened
 # and 6 tasks, the wroker[1] will take the tasks 1/3/5 and the worker[2] the tasks 2/4/6
 # in a parallism fashion. 
+# In this scenary once RabbitMQ delivers a message to the consumer it immediately removes it from memory.
+# So, if a worker die we will lose the message it was just processing, also lose all the messages that were
+# dispatched to this particular worker, but were not yet handled.
 
 # init a new connection to RabbitMQ by using Bunny
 conn = Bunny.new
