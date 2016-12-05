@@ -17,19 +17,7 @@ ch   = conn.create_channel
 q    = ch.queue("hello")
 
 # capture the message
-# while true
-#     puts "Write a message"
-#     message = $stdin.readline()
-
-
-#     # send/publish a message
-#     ch.default_exchange.publish(message, :routing_key => q.name)
-
-#     # print messaged sent (only for testing)
-#     puts "[x] Sent '#{message.strip}'"
-# end
-
-message = "This is a message from sender"
+message = ARGV.empty? ? "Default message" : ARGV.join(" ")
 
 # send/publish a message
 ch.default_exchange.publish(message, :routing_key => q.name)
