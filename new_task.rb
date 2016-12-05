@@ -4,12 +4,13 @@
 require "bunny"
 
 # -------------------------------
-# Message durability
+# Fair dispatch
 # -------------------------------
 
-# When RabbitMQ quits or crashes it will forget the queues and messages unless you tell it not to. 
-# Two things are required to make sure that messages aren't lost: 
-# we need to mark both the queue and messages as durable.
+# The prefetch method with the value of 1. 
+# This tells RabbitMQ not to give more than one message to a worker at a time. 
+# Or, in other words, don't dispatch a new message to a worker until it has processed 
+# and acknowledged the previous one. Instead, it will dispatch it to the next worker that is not still busy.
 
 
 
@@ -24,6 +25,7 @@ conn.start
 # create a channel
 ch   = conn.create_channel
 
+
 # create a queue (mailbox)
 q    = ch.queue("task_queue", :durable => true)
 
@@ -36,4 +38,5 @@ q.publish(message, :persistent => true)
 # print messaged sent (only for testing)
 puts "[x] Sent '#{message.strip}'"
 
+sleep 1.0
 conn.close
