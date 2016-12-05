@@ -4,18 +4,12 @@
 require "bunny"
 
 # -------------------------------
-# acknowledgments
+# Message durability
 # -------------------------------
 
-# In order to make sure a message is never lost, RabbitMQ supports message acknowledgments. 
-# An ack(nowledgement) is sent back from the consumer to tell RabbitMQ that a particular message has been received, 
-# processed and that RabbitMQ is free to delete it.
-
-# If a consumer dies (its channel is closed, connection is closed, or TCP connection is lost) 
-# without sending an ack, RabbitMQ will understand that a message wasn't processed fully and will re-queue it. 
-# If there are other consumers online at the same time, it will then quickly redeliver it to another consumer
-
-# Message acknowledgments are turned off by default.
+# When RabbitMQ quits or crashes it will forget the queues and messages unless you tell it not to. 
+# Two things are required to make sure that messages aren't lost: 
+# we need to mark both the queue and messages as durable.
 
 
 
@@ -31,7 +25,7 @@ conn.start
 ch   = conn.create_channel
 
 # create a queue (mailbox)
-q    = ch.queue("hello")
+q    = ch.queue("task_queue", :durable => true)
 
 # capture the message
 # receive the message from the command line, example:  $ ./new_task.rb some...

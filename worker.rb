@@ -10,7 +10,7 @@ conn.start
 # open a channel
 ch   = conn.create_channel
 # open/create a queue (mailbox)
-q    = ch.queue("hello")
+q    = ch.queue("task_queue", :durable => true)
 
 
 
