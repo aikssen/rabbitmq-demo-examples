@@ -4,16 +4,22 @@
 require "bunny"
 
 # -------------------------------
-# Task Queue
+# acknowledgments
 # -------------------------------
 
-# this is multitask - it can be opened many worker.rb consoles and each one will
-# take a task from the queue. For example, if there are two worker.rb consoles opened
-# and 6 tasks, the wroker[1] will take the tasks 1/3/5 and the worker[2] the tasks 2/4/6
-# in a parallism fashion. 
-# In this scenary once RabbitMQ delivers a message to the consumer it immediately removes it from memory.
-# So, if a worker die we will lose the message it was just processing, also lose all the messages that were
-# dispatched to this particular worker, but were not yet handled.
+# In order to make sure a message is never lost, RabbitMQ supports message acknowledgments. 
+# An ack(nowledgement) is sent back from the consumer to tell RabbitMQ that a particular message has been received, 
+# processed and that RabbitMQ is free to delete it.
+
+# If a consumer dies (its channel is closed, connection is closed, or TCP connection is lost) 
+# without sending an ack, RabbitMQ will understand that a message wasn't processed fully and will re-queue it. 
+# If there are other consumers online at the same time, it will then quickly redeliver it to another consumer
+
+# Message acknowledgments are turned off by default.
+
+
+
+
 
 # init a new connection to RabbitMQ by using Bunny
 conn = Bunny.new
